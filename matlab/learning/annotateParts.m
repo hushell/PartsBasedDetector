@@ -1,4 +1,12 @@
 function annotateParts(directory, regex, replace, part_labels)
+% comments by Shell Hu
+% directory: dir where contains images to be trained
+% regex: common pattern of positive images 
+% replace: string to be replaced in image name 
+% part_labels: name of each part
+% dir = '../../AClass/pos/';
+% pname = {'r','c','u1','u2','u3','u4','d1','d2','d3','d4'};
+% annotateParts(dir, 'pos', '', pname);
 
   % remove trailing slash from the directory if need be
   if isequal(directory(end), '/') directory = directory(1:end-1); end

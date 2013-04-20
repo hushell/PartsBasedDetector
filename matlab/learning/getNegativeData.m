@@ -1,4 +1,5 @@
 function neg = getNegativeData(directory, im_regex)
+%neg        = getNegativeData('/path/to/positive/data', 'im_regex');
 
   % remove trailing slash from the directory if need be
   if isequal(directory(end), '/') directory = directory(1:end-1); end

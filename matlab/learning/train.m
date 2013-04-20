@@ -89,7 +89,7 @@ for t = 1:iter,
   % Update QP with coordinate descent
   qp.svfix = 1:qp.n;
   qp.sv(qp.svfix) = 1;
-  qp_prune();
+  %qp_prune();
   qp_opt();
   model = vec2model(qp_w,model);
 	interval0 = model.interval;

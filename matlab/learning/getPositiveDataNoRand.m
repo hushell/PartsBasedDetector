@@ -1,5 +1,5 @@
-function [pos test] = getPositiveData(directory, im_regex, lm_regex, split)
-%[pos test] = getPositiveData('/path/to/positive/data','im_regex','label_regex',0.7);
+function [pos test] = getPositiveDataNoRand(directory, im_regex, lm_regex, testIdx)
+% testIdx: e.g. [1,2]
 
   % remove trailing slash from the directory if need be
   if isequal(directory(end), '/') directory = directory(1:end-1); end
@@ -14,7 +14,9 @@ function [pos test] = getPositiveData(directory, im_regex, lm_regex, split)
   % get the number of examples
   numposim = length(posim);
   numposlm = length(poslm);
-  if ~isequal(numposim, numposlm) error('The number of matched images and annotations is not equal'); end
+  if ~isequal(numposim, numposlm) 
+      error('The number of matched images and annotations is not equal'); 
+  end
   
   % import the examples into the structure
   for n = 1:numposim
@@ -23,9 +25,8 @@ function [pos test] = getPositiveData(directory, im_regex, lm_regex, split)
   end
   
   % split them for training and testing
-  N = randperm(numposim);
-  test = pos(N(ceil(numposim*split):end));
-  pos  = pos(N(1:floor(numposim*split)));
+  test = pos(testIdx);
+  pos  = pos(setdiff(1:numposim,testIdx));
   
 end
 

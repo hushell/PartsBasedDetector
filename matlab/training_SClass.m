@@ -1,16 +1,16 @@
 % --------------------
 % specify model parameters
 % number of mixtures for 6 parts
-K = [1 1 1 1 1 1];
+K = [1 1 1 1 1 1 1 1 1 1 1 1 1];
 
 % Tree structure for 6 parts: pa(i) is the parent of part i
 % This structure is implicity assumed during data preparation
 % (PARSE_data.m) and evaluation (PARSE_eval_pcp)
-pa = [0 1 1 3 1 5];
+pa = [0 1 2 3 4 5 6 1 8 9 10 11 12];
 
 % need to be specified
-name = 'DClass';
-dir = '/scratch/working/AVATOL/DClass/';
+name = 'SClass';
+dir = '/scratch/working/AVATOL/SClass/';
 
 % Spatial resolution of HOG cell, interms of pixel width and hieght
 sbin = 8;
@@ -23,11 +23,10 @@ globals;
 %neg        = getNegativeData('/path/to/positive/data', 'im_regex');
 [pos test] = getPositiveData([dir,'pos/'],'png','txt',0.95);
 neg        = getNegativeData([dir,'neg/'],'png');
-pos        = pointtobox(pos,pa,1,1);
+pos        = pointtobox(pos,pa,0.65,1);
 
 % show data
-%colorset = {'g','g','r','r','r','r','b','b','b','b'};
-colorset = {'g','g','r','r','b','b'};
+colorset = {'g','r','r','r','r','r','r','b','b','b','b','b','b'};
 for i=1:length(pos)
     B = [pos(i).x1;pos(i).y1;pos(i).x2;pos(i).y2];
     B = reshape(B,[4*length(pa),1])';
@@ -53,7 +52,7 @@ figure(2);
 visualizeskeleton(model);
 
 % demo
-demoimid = 2;
+demoimid = 1;
 im = imread(test(demoimid).im);
 box = boxes{demoimid};
 % show all detections

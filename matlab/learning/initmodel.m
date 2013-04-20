@@ -12,7 +12,8 @@ for n = 1:length(pos)
 end
 % pick 5 percentile area
 areas = sort(h.*w);
-area = areas(floor(length(areas) * 0.05));
+%area = areas(floor(length(areas) * 0.05));
+area = areas(1);
 % pick dimensions
 nw = sqrt(area/aspect);
 nh = nw*aspect;

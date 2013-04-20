@@ -22,7 +22,7 @@ for n = 1:length(files)
     if octave, cmd = [gcc ' ' octaveflags ' ' files{n}];
     else       cmd = [gcc ' ' matlabflags ' ' files{n}];
     end
-    disp(['  ' cmd]); fflush(stdout);
+    disp(['  ' cmd]); %fflush(stdout);
     eval(cmd);
 end
 
@@ -49,7 +49,7 @@ for n = 1:length(files)
     if octave, cmd = [gcc ' ' octaveflags ' ' files{n}];
     else       cmd = [gcc ' ' matlabflags ' ' files{n}];
     end
-    disp(['  ' cmd]); fflush(stdout);
+    disp(['  ' cmd]); %fflush(stdout);
     eval(cmd);
 end
 

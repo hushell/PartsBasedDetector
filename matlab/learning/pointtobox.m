@@ -1,4 +1,9 @@
-function pos = pointtobox(pos,pa)
+function pos = pointtobox(pos,pa,const1,const2)
+% const1 and const2 control the size of bbox
+if(nargin < 3)
+    const1 = 1.0;
+    const2 = 1.3;
+end
 
 len = zeros(length(pos),length(pa)-1);
 for n = 1:length(pos)
@@ -20,7 +25,8 @@ end
 boxsize = zeros(1,length(pos));
 for n = 1:length(pos)
   ratio = len(n,:)./r;
-  boxsize(n) = quantile(ratio(:),0.85, 1, 7);
+  %boxsize(n) = quantile(ratio(:),0.85, 1, 7);
+  boxsize(n) = quantile(ratio(:),const1) * const2;
 end
 
 for n = 1:length(pos)

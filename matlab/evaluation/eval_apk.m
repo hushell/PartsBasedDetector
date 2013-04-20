@@ -1,13 +1,15 @@
-function [apk prec rec] = eval_apk(ca,gt,thresh)
+function [apk prec rec dist_ca] = eval_apk(ca,gt,thresh)
 
-if nargin < 4
-  thresh  = 0.5;
+if nargin < 3
+  thresh  = 0.1;
 end
 
 [sc,si] = sort(cat(1,ca.score),'descend');
 ca = ca(si);
 
 numca = numel(ca);
+
+dist_ca = -1 * zeros(numca,1);
 
 tp = zeros(numca,1);
 fp = zeros(numca,1);
@@ -20,6 +22,8 @@ for n = 1:numca
   % assign detection to ground truth object if any
   dist = sqrt(sum((ca(n).point-gt(i).point).^2,2));
   dist  = dist ./ gt(i).scale;
+  
+  dist_ca(n) = dist;
   
   [distmin jmin] = min(dist);
   % assign detection as true positive/don't care/false positive
