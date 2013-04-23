@@ -1,4 +1,4 @@
-function top = nms(boxes,overlap,numpart)
+function [top,pick] = nms(boxes,overlap,numpart)
 % Non-maximum suppression.
 % Greedily select high-scoring detections and skip detections
 % that are significantly covered by a previously selected detection.
@@ -55,6 +55,7 @@ while ~isempty(I)
   i = I(last);
   pick = [pick; i];
 
+  % find interections
   xx1 = bsxfun(@max,x1(i,:), x1(I,:));
   yy1 = bsxfun(@max,y1(i,:), y1(I,:));
   xx2 = bsxfun(@min,x2(i,:), x2(I,:));
@@ -66,6 +67,7 @@ while ~isempty(I)
 
   o = inter ./ repmat(area(i,:),size(inter,1),1);
   o = max(o,[],2);
+  % discard BBs overlapped > thres with the current highest pick
   I(o > overlap) = [];
 end  
 top = boxes(pick,:);

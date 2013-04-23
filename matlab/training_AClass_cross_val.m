@@ -57,6 +57,8 @@ rec = cell(nFolds,1);
 allBoxes = cell(nFolds,1);
 allTests = cell(nFolds,1);
 allModels = cell(nFolds,1);
+allPscores = cell(nFolds,1);
+allPdists = cell(nFolds,2);
 
 current = 0;
 
@@ -80,10 +82,12 @@ for ci = 1:nFolds
     % testing
     suffix = num2str(K')';
     model.thresh = min(model.thresh,-2);
-    boxes = testmodel([name, '_iter_', num2str(ci)],model,test,suffix);
+    [boxes,pscores] = testmodel([name, '_iter_', num2str(ci)],model,test,suffix);
     allBoxes{ci} = boxes;
     allTests{ci} = test;
     allModels{ci} = model;
+    allPscores{ci} = pscores;
+    [allPdists{ci,1}, allPdists{ci,2}] = part_dist(boxes);
 
     % --------------------
     if (demo_active == 1)
@@ -117,4 +121,4 @@ for ci = 1:nFolds
     
 end
 
-save([name, '_eval', '.mat'], 'apk', 'prec', 'rec', 'allBoxes', 'allTests', 'allModels');
+save([name, '_eval', '.mat'], 'apk', 'prec', 'rec', 'allBoxes', 'allTests', 'allModels', 'allPscores', 'allPdists');

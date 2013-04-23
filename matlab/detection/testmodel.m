@@ -1,4 +1,4 @@
-function boxes = testmodel(name,model,test,suffix)
+function [boxes,pscores] = testmodel(name,model,test,suffix)
 % boxes = testmodel(name,model,test,suffix)
 % Returns candidate bounding boxes after non-maximum suppression
 
@@ -8,15 +8,22 @@ try
   load([cachedir name '_boxes_' suffix]);
 catch
   boxes = cell(1,length(test));
+  pscores = cell(1,length(test));
   for i = 1:length(test)
     fprintf([name ': testing: %d/%d\n'],i,length(test));
     im = imread(test(i).im);
-    box = detect_fast(im,model,model.thresh);
-    boxes{i} = nms(box,0.3);
+    [box,pscore] = detect_fast(im,model,model.thresh);
+    [boxes{i},pick] = nms(box,0.3);
+    
+    if size(pscore,1) > 1000
+        [~,I] = sort(pscore(:,1),'descend');
+        pscore = pscore(I(1:1000),:);
+    end
+    pscores{i} = pscore(pick,:);
   end
 
   if nargin < 4
     suffix = [];
   end
-  save([cachedir name '_boxes_' suffix], 'boxes','model');
+  save([cachedir name '_boxes_' suffix], 'boxes','pscores','model');
 end

@@ -2,10 +2,10 @@ function [apk,prec,rec,dist_ca] = AVATOL_eval_apk(boxes,test,distThresh,plot_act
 %
 if nargin < 3
   distThresh  = 0.1;
-  plot_act = 1;
+  plot_act = 0;
 end
 if nargin < 4
-  plot_act = 1;
+  plot_act = 0;
 end
 % -------------------
 % count the total number of candidates

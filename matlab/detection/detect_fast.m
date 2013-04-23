@@ -1,4 +1,4 @@
-function boxes = detect_fast(im, model, thresh)
+function [boxes,pscores] = detect_fast(im, model, thresh)
 % boxes = detect(im, model, thresh)
 % Detect objects in input using a model and a score threshold.
 % Higher threshold leads to fewer detections.
@@ -16,6 +16,9 @@ levels   = 1:length(pyra.feat);
 % Cache various statistics derived from model
 [components,filters,resp] = modelcomponents(model,pyra);
 boxes = zeros(10000,length(components{1})*4+2);
+if nargout >= 2
+    pscores = zeros(10000,length(components{1}));
+end
 cnt   = 0;
 
 % Iterate over scales and components,
@@ -55,12 +58,22 @@ for rlevel = levels,
       box = backtrack(X,Y,Ik(I),parts,pyra);
       i   = cnt+1:cnt+length(I);
       boxes(i,:) = [box repmat(c,length(I),1) rscore(I)];
+      if nargout >= 2
+          for t = 1:numparts
+              pscores(i,t) = parts(t).score(I);
+          end
+      end
       cnt = i(end);
     end
   end
 end
 
 boxes = boxes(1:cnt,:);
+if nargout >= 2
+    pscores = pscores(1:cnt,:);
+end
+
+      
 
 % Cache various statistics from the model data structure for later use  
 function [components,filters,resp] = modelcomponents(model,pyra)
