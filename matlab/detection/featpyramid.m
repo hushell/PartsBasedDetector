@@ -12,7 +12,11 @@ padx      = max(model.maxsize(2)-1-1,0);
 pady      = max(model.maxsize(1)-1-1,0);
 sc = 2 ^(1/interval);
 imsize = [size(im, 1) size(im, 2)];
-max_scale = 1 + floor(log(min(imsize)/(5*sbin))/log(sc));
+
+%max_scale = 1 + floor(log(min(imsize)/(5*sbin))/log(sc));
+max_octave = floor(log(min(imsize)/sbin)) - 1;
+max_scale = max_octave * interval;
+
 pyra.feat = cell(max_scale,1);
 pyra.scale = zeros(max_scale,1);
 
@@ -21,16 +25,29 @@ if size(im, 3) == 1
 end
 im = double(im); % our resize function wants floating point values
 
-for i = 1:interval
-  scaled = resize(im, 1/sc^(i-1));
-  pyra.feat{i} = features(scaled,sbin);
-  pyra.scale(i) = 1/sc^(i-1);
-  % remaining interals
-  for j = i+interval:interval:max_scale
-    scaled = reduce(scaled);
-    pyra.feat{j} = features(scaled,sbin);
-    pyra.scale(j) = 0.5 * pyra.scale(j-interval);
-  end
+% for i = 1:interval
+%   scaled = resize(im, 1/sc^(i-1));
+%   pyra.feat{i} = features(scaled,sbin);
+%   pyra.scale(i) = 1/sc^(i-1);
+%   % remaining interals
+%   for j = i+interval:interval:max_scale
+%     scaled = reduce(scaled);
+%     pyra.feat{j} = features(scaled,sbin);
+%     pyra.scale(j) = 0.5 * pyra.scale(j-interval);
+%   end
+% end
+
+scal = 1.0;
+res_im = im;
+for oct = 1:max_octave
+    for i = 1:interval
+        pyra.feat{(oct-1)*interval + i} = features(res_im,sbin);
+        pyra.scale((oct-1)*interval + i) = scal * 0.5^(oct-1);
+        
+        scal = 2^(-(i+1)/interval);
+        res_im = resize(im,scal);
+    end
+    im = res_im;
 end
 
 for i = 1:length(pyra.feat)

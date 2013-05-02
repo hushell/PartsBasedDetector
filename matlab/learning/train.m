@@ -29,7 +29,7 @@ if nargin < 9
   % maxsize*1e9/(4*model.len)  = # of examples we can store, encoded as 4-byte floats
   no_sv = (wpos+1) * length(pos);
   maxsize = 10 * no_sv * 4 * sparselen(model) / 1e9;
-  maxsize = min(max(maxsize,6),7.5);
+  maxsize = min(max(maxsize,6),4.5);
   % the current version of octave does really bad memory reallocations
   % when slicing, so we can't use too much memory otherwise it starts paging
   if isoctave() maxsize = 1.8; end
@@ -58,7 +58,7 @@ global qp;
 % qp.a(i)   = ith dual variable
 qp.x   = zeros(len,nmax,'single');
 qp.i   = zeros(5,nmax,'int32');
-qp.b   = ones(nmax,1,'single');
+qp.b   = ones(nmax,1,'single'); % NOTE: need change to part level loss
 qp.d   = zeros(nmax,1,'double');
 qp.a   = zeros(nmax,1,'double');
 qp.sv  = logical(zeros(1,nmax));  
@@ -138,9 +138,9 @@ for i = 1:numpos
 	fprintflush('%s: iter %d: warped positive: %d/%d\n', name, t, i, numpos);
 	bbox = [pos(i).x1 pos(i).y1 pos(i).x2 pos(i).y2];
 	% skip small examples
-	if (bbox(3)-bbox(1)+1)*(bbox(4)-bbox(2)+1) < minsize
-		continue;
-	end    
+% 	if (bbox(3)-bbox(1)+1)*(bbox(4)-bbox(2)+1) < minsize
+% 		continue;
+% 	end    
 	% get example
 	im = warped{i};
 	feat = features(im, model.sbin);
@@ -173,13 +173,13 @@ for i = 1:numpos
 	fprintflush('%s: iter %d: latent positive: %d/%d\n', name, t, i, numpos);
 	% skip small examples
 	bbox.xy = [pos(i).x1' pos(i).y1' pos(i).x2' pos(i).y2'];
-  if isfield(pos,'mix')
-    bbox.m = pos(i).mix;
-  end
-	area = (bbox.xy(:,3)-bbox.xy(:,1)+1).*(bbox.xy(:,4)-bbox.xy(:,2)+1);
-	if any(area < minsize)
-		continue;
-	end
+    if isfield(pos,'mix')
+        bbox.m = pos(i).mix;
+    end
+% 	area = (bbox.xy(:,3)-bbox.xy(:,1)+1).*(bbox.xy(:,4)-bbox.xy(:,2)+1);
+% 	if any(area < minsize)
+% 		continue;
+% 	end
 	
 	% get example
 	im = imread(pos(i).im);

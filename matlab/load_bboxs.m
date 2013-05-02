@@ -1,5 +1,9 @@
-function [pos] = load_bboxs(Npos,partnum,filename)  
+function [pos] = load_bboxs(Npos,partnum,filename,pad)  
 % read bbox annotations by Inria's imgAnnotation tool
+
+if nargin < 4
+    pad = 8;
+end
 
 pos = struct();
 
@@ -14,10 +18,10 @@ while i <= Npos && ischar(tline)
     if strfind(tline, 'file:') == 1
         currentImagePath = strtrim(strrep(tline, 'file: ', ''));
         pos(i).im = currentImagePath;
-        pos(i).x1 = zeros(partnum,1);
-        pos(i).y1 = zeros(partnum,1);
-        pos(i).x2 = zeros(partnum,1);
-        pos(i).y2 = zeros(partnum,1);
+        pos(i).x1 = zeros(1,partnum);
+        pos(i).y1 = zeros(1,partnum);
+        pos(i).x2 = zeros(1,partnum);
+        pos(i).y2 = zeros(1,partnum);
         pos(i).point = zeros(partnum,2);
         
     elseif strfind(tline, 'bbox:') == 1
@@ -26,10 +30,10 @@ while i <= Npos && ischar(tline)
         bbox = textscan(bbox,'%s','delimiter',',');
         
         % convert bounding box coordinates to MATLAB
-        x = str2double(bbox{1}(1));
-        y = str2double(bbox{1}(2));
-        width = str2double(bbox{1}(3));
-        height = str2double(bbox{1}(4));
+        x = str2double(bbox{1}(1))-pad;
+        y = str2double(bbox{1}(2))-pad;
+        width = str2double(bbox{1}(3))+2*pad;
+        height = str2double(bbox{1}(4))+2*pad;
         %featureImage = currentImage(y:y+height,x:x+width,:);
 
         pos(i).x1(pid) = x;

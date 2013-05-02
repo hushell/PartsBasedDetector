@@ -86,19 +86,19 @@ for rlevel = levels
       parts(k).level = level;
 	  
       if latent
-				for fi = 1:length(f)
-					if isfield(bbox,'m')
-						if fi ~= bbox.m(k)
-							parts(k).score(:,:,fi) = -INF;
-						end
-					else
-						ovmask = testoverlap(parts(k).sizx(fi),parts(k).sizy(fi),pyra,rlevel,bbox.xy(k,:),overlap);
-						tmpscore = parts(k).score(:,:,fi);
-						tmpscore(~ovmask) = -INF;
-						parts(k).score(:,:,fi) = tmpscore;
-					end
-				end
-			end
+	    for fi = 1:length(f)
+	    	if isfield(bbox,'m')
+	    		if fi ~= bbox.m(k)
+	    			parts(k).score(:,:,fi) = -INF;
+	    		end
+	    	else
+	    		ovmask = testoverlap(parts(k).sizx(fi),parts(k).sizy(fi),pyra,rlevel,bbox.xy(k,:),overlap);
+	    		tmpscore = parts(k).score(:,:,fi);
+	    		tmpscore(~ovmask) = -INF;
+	    		parts(k).score(:,:,fi) = tmpscore;
+	    	end
+	    end
+	  end
     end
     
     % Walk from leaves to root of tree, passing message to parent

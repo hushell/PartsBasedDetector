@@ -1,4 +1,8 @@
-function model = initmodel(pos,sbin,tsize)
+function model = initmodel(pos,sbin,tsize,initPartID)
+
+if nargin < 4
+    initPartID = 1;
+end
 
 % aspect ratio is kept as 1, so no need to pick mode of aspect ratios
 aspect = 1;
@@ -7,8 +11,8 @@ aspect = 1;
 w = zeros(1,length(pos));
 h = zeros(1,length(pos));
 for n = 1:length(pos)
-  w(n) = pos(n).x2(1) - pos(n).x1(1) + 1;
-  h(n) = pos(n).y2(1) - pos(n).y1(1) + 1;
+  w(n) = pos(n).x2(initPartID) - pos(n).x1(initPartID) + 1;
+  h(n) = pos(n).y2(initPartID) - pos(n).y1(initPartID) + 1;
 end
 % pick 5 percentile area
 areas = sort(h.*w);
