@@ -19,6 +19,7 @@ for i=1:length(model.filters)
 	tmp_size = tmp_size(1:2);
 	limit = max(limit,max(tmp_size));
 end
+fprintf('[***DEBUG***] limit = %f\n', limit);
 
 %max_scale = 1 + floor(log(min(imsize)/(5*sbin))/log(sc));
 max_octave = floor(log(min(imsize)/sbin)) - 1;
@@ -47,6 +48,7 @@ im = double(im); % our resize function wants floating point values
 scal = 1.0;
 res_im = im;
 flag = 0;
+trunc = max_scale;
 for oct = 1:max_octave
     for i = 1:interval
         pyra.feat{(oct-1)*interval + i} = features(res_im,sbin);
@@ -56,8 +58,12 @@ for oct = 1:max_octave
         res_im = resize(im,scal);
 
 		[h,w] = size(res_im);
+        h = max(floor(h/sbin)-2,0);
+        w = max(floor(w/sbin)-2,0);
 		if (h < limit || w < limit)
+            fprintf('[***DEBUG***] flag is set!! w = %d, h = %d\n', w,h);
 			flag = 1;
+            trunc = (oct-1)*interval + i;
 			break;
 		end
     end
@@ -66,6 +72,9 @@ for oct = 1:max_octave
 	end
     im = res_im;
 end
+
+pyra.feat = pyra.feat(1:trunc,1);
+pyra.scale = pyra.scale(1:trunc,1);
 
 for i = 1:length(pyra.feat)
   % add 1 to padding because feature generation deletes a 1-cell

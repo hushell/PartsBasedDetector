@@ -60,6 +60,7 @@ for rlevel = levels,
       boxes(i,:) = [box repmat(c,length(I),1) rscore(I)];
       if nargout >= 2
           for t = 1:numparts
+              % TODO: parts now distributed differently from root
               pscores(i,t) = parts(t).score(I);
           end
       end

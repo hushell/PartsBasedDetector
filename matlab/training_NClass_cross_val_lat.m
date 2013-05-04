@@ -14,7 +14,8 @@ pa = [0 1 2 3 4 5 6];
 
 % need to be specified
 name = 'NClass_lat';
-dir = '/home/hushell/working/AVATOL/datasets/Lateral_View/Noctilio/';
+%dir = '/home/hushell/working/AVATOL/datasets/Lateral_View/Noctilio/';
+dir = '/scratch/working/AVATOL/datasets/Lateral_View/Noctilio/';
 
 % Spatial resolution of HOG cell, interms of pixel width and hieght
 sbin = 8;
@@ -59,8 +60,8 @@ rec = cell(nFolds,1);
 allBoxes = cell(nFolds,1);
 allTests = cell(nFolds,1);
 allModels = cell(nFolds,1);
-allPscores = cell(nFolds,1);
-allPdists = cell(nFolds,2);
+% allPscores = cell(nFolds,1);
+% allPdists = cell(nFolds,2);
 
 current = 0;
 
@@ -86,12 +87,13 @@ for ci = 1:nFolds
     % testing
     suffix = num2str(K')';
     model.thresh = min(model.thresh,-2);
-    [boxes,pscores] = testmodel([name, '_iter_', num2str(ci)],model,test,suffix);
+    %[boxes,pscores] = testmodel([name, '_iter_', num2str(ci)],model,test,suffix);
+    [boxes] = testmodel([name, '_iter_', num2str(ci)],model,test,suffix);
     allBoxes{ci} = boxes;
     allTests{ci} = test;
     allModels{ci} = model;
-    allPscores{ci} = pscores;
-    [allPdists{ci,1}, allPdists{ci,2}] = part_dist(boxes);
+    %allPscores{ci} = pscores;
+    %[allPdists{ci,1}, allPdists{ci,2}] = part_dist(boxes);
 
     % --------------------
     if (demo_active == 1)
@@ -125,4 +127,5 @@ for ci = 1:nFolds
     
 end
 
-save([name, '_eval', '.mat'], 'apk', 'prec', 'rec', 'allBoxes', 'allTests', 'allModels', 'allPscores', 'allPdists');
+%save([name, '_eval', '.mat'], 'apk', 'prec', 'rec', 'allBoxes', 'allTests', 'allModels', 'allPscores', 'allPdists');
+save([name, '_eval', '.mat'], 'apk', 'prec', 'rec', 'allBoxes', 'allTests', 'allModels');
