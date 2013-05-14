@@ -1,8 +1,12 @@
-function showboxesGT(im, boxes, GTBBs, partcolor)
+function showboxesGT(im, boxes, GTBBs, partcolor, partcolorGT)
 
 if nargin < 4
 	%partcolor = {'g','g','y','r','r','y','m','m','y','b','b','y','c','c'};
     partcolor = {'g','g','r','r','r','r','b','b','b','b'};
+    partcolorGT = partcolor;
+end
+if nargin < 5
+    partcolorGT = partcolor;
 end
 
 imagesc(im); axis image; axis off;
@@ -22,7 +26,7 @@ if ~isempty(boxes)
 end
 
 if ~isempty(GTBBs)
-  numparts = length(partcolor);
+  numparts = length(partcolorGT);
   box = GTBBs(:,1:4*numparts);
   xy = reshape(box,size(box,1),4,numparts);
   xy = permute(xy,[1 3 2]);
@@ -32,7 +36,7 @@ if ~isempty(GTBBs)
 	y2 = xy(:,:,4);
 	for p = 1:size(xy,2)
 		line([x1(:,p) x1(:,p) x2(:,p) x2(:,p) x1(:,p)]',[y1(:,p) y2(:,p) y2(:,p) y1(:,p) y1(:,p)]',...
-		'color',partcolor{p},'linewidth',3, 'LineStyle', '--');
+		'color',partcolorGT{p},'linewidth',3, 'LineStyle', '--');
 	end
 end
 

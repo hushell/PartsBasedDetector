@@ -1,4 +1,4 @@
-function showboxes(im, boxes, partcolor, isSave, imName)
+function showboxesTransfer(im, boxes, partcolor, isSave, imName)
 
 if nargin < 3
 	%partcolor = {'g','g','y','r','r','y','m','m','y','b','b','y','c','c'};
@@ -7,7 +7,7 @@ if nargin < 3
     imName = 'picture.png';
 end
 
-imagesc(im); axis image; axis off;
+% imagesc(im); axis image; axis off;
 if ~isempty(boxes)
   numparts = length(partcolor);
   box = boxes(:,1:4*numparts);
@@ -24,7 +24,7 @@ if ~isempty(boxes)
 end
 % JFrame = get(handle(gcf),'JavaFrame');
 % JFrame.setMaximized(true);
-drawnow;
+% drawnow;
 % if isSave == 1
 %     saveas(gcf,['./GT/GT_',imName]);
 % end
